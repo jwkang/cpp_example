@@ -10,7 +10,7 @@ OUTPUT = a.out
 
 LIBS = -Llib 
 INCLUDES = -Iinclude 
-CFLAGS = $(LIBS) $(INCLUDES) -lm -g -std=c++11 -Wall -pedantic
+CFLAGS = $(LIBS) $(INCLUDES) -lm -g -pthread -std=c++11 -Wall -pedantic
 
 all: $(TARGET)
 	
