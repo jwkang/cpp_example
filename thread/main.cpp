@@ -22,12 +22,14 @@ class Test
         {
             cout << "wait for T1" << endl;
             mT1->join();
+            delete mT1;
         }
 
         if (mT2 && mT2->joinable())
         {
             cout << "wait for T2" << endl;
             mT2->join();
+            delete mT2;
         }
     }
 
@@ -51,6 +53,8 @@ class Test
             sleep(1);
             cout << mGreeting << endl;
         }
+
+        return 0;
     }
 };
 
@@ -72,6 +76,8 @@ void Test::runMultiThreadAynsc()
 int main()
 {
     Test t;
+
+    LOG("start thread");
     t.runMultiThread();
 
     for (int i = 0; i < 10; i++)
