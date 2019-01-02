@@ -4,13 +4,13 @@ CC = g++
 
 TARGET = main
 
-SRCS = main.cpp
-OBJECTS = main.o
+SRCS = MessageHandler.cpp main.cpp
+OBJECTS = MessageHandler.o main.o
 OUTPUT = a.out
 
 LIBS = -Llib 
 INCLUDES = -Iinclude 
-CFLAGS = $(LIBS) $(INCLUDES) -lm -std=c++11 -Wall -pedantic
+CFLAGS = $(LIBS) $(INCLUDES) -lm -g -pthread -std=c++11 -Wall -pedantic
 
 all: $(TARGET)
 	
@@ -19,8 +19,11 @@ $(TARGET): $(OBJECTS)
 #	$(CC) $(CFLAGS) -o $@ $(OBJECTS)
 	$(call after_build)
 
-$(OBJECTS): $(SRCS) 
-	$(CC) $(CFLAGS) -c $<
+#$(OBJECTS): $(SRCS) 
+#	$(CC) $(CFLAGS) -c $<
+
+$(OBJECTS): %.o : %.cpp
+	$(CC) $(CFLAGS) -c $< -o $@
 
 .SUFFIXES : .cpp .o
 .PHONY: clean

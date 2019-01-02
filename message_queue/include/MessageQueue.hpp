@@ -4,8 +4,9 @@
 #include <condition_variable>
 #include <mutex>
 #include <queue>
+#include <chrono>
 
-using namespace std;
+static auto ms = std::chrono::milliseconds(1);
 
 template <class T>
 class MessageQueue {
@@ -49,12 +50,17 @@ public:
         mCondition.notify_one();
     }
 
-    T getMessage(void)
+    T getMessage(long timeoutMs)
     {
         std::unique_lock<std::mutex> lock(mMutex);
         while ((mIsLoop) && (mQueue.empty())) {
-        mCondition.wait(lock);
+            mCondition.wait_for(lock, 500*ms);
         }
+
+        if( !mIsLoop ) {
+            return nullptr;
+        }
+
         T val = mQueue.front();
         mQueue.pop();
         return val;

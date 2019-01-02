@@ -1,18 +1,28 @@
-#ifndef _MESSAGE_H
-#define _MESSAGE_H
+#ifndef _MESSAGE_HANDLER_H
+#define _MESSAGE_HANDLER_H
 
-#include "MessageQueue.hpp"
 #include "Message.hpp"
+#include "MessageQueue.hpp"
+#include <memory>
+#include <thread>
 
 class MessageHandler {
 private:
-    MessageQueue mMessageQueue;
+    MessageQueue<std::shared_ptr<Message>> mMessageQueue;
     bool mIsRunning;
+    std::thread mLooper;
     void loop();
 
+protected:
+    virtual void handleMessage(std::shared_ptr<Message> message) = 0;
+
 public:
-    MessageHandler() : mIsRunning(false) {}
-    virtual ~MessageHandler() {}
+    MessageHandler()
+        : mIsRunning(false)
+    {
+    }
+
+    virtual ~MessageHandler() { stop(); }
 
     void start();
     void stop();
@@ -20,4 +30,4 @@ public:
     void sendMessage(std::shared_ptr<Message> message);
 };
 
-#endif //_MESSAGE_H
+#endif //_MESSAGE_HANDLER_H
