@@ -12,7 +12,7 @@ using namespace std;
 
 class myClass {
     public:
-        static const myClass *getInstance() {
+        static myClass *getInstance() {
             call_once(myClass::mOnceFlag, []() {
                     printf("myClass Instance is created...\n");
                     mInstance.reset(new myClass);
@@ -24,6 +24,8 @@ class myClass {
         void log() {
             printf("hello\n");
         }
+
+        ~myClass() { LOG("%s called", __FUNCTION__); }
 
 
     private:
@@ -38,12 +40,10 @@ class myClass {
 unique_ptr<myClass> myClass::mInstance;
 once_flag myClass::mOnceFlag;
 
-#endif //SNOWTHREAD_SINGLETON_H
-
 int main()
 {
     LOG("hihihi");
 
-    myClass::getInstance().log();
-    myClass::getInstance().log();
+    myClass::getInstance()->log();
+    myClass::getInstance()->log();
 }
