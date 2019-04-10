@@ -3,24 +3,41 @@
 #include <vector>
 #include <algorithm>
 #include <stdio.h>
-#include "_macro.hpp"
+#include <stdarg.h>
 
-void f2(int i, int j, int k)
-{
-    using namespace std;
-    cout << i << j << k << endl;
-}
+#include <sstream>
 
+const char* ANDROID_LOG_INFO = "INFO";
+const char* MAIN_TAG = "MAIN_TAG";
+
+#define LOGI(...) f(ANDROID_LOG_INFO, MAIN_TAG, ##__VA_ARGS__)
+
+#if 1
 template<typename ...Args>
-void f(Args... args)
+void f(const char *level, const char *tag, const char* fmt, Args... args)
 {
-    f2(args...);
+    char buf[100];
+    sprintf(buf, fmt, args...);
+
+    std::ostringstream ss;
+    ss << "[" << level << "]" << "[" << tag << "] " << buf;
+    std::string header = ss.str();
+
+    std::cout << header;
 }
+#else
+void f(const char *level, const char *tag, const char* fmt, ...)
+{
+    printf("[%s][%s]", level, tag);
+    va_list args;
+    va_start(args, fmt);
+    printf(fmt, args);
+    va_end(args);
+}
+#endif
 
 int main()
 {
-    LOG("hihihi");
-
-    f(1,2,3);
+    f(ANDROID_LOG_INFO, MAIN_TAG, "hi %s\n", "jongwon");
     //f(1,2,3,4,5,6,7); // error
 }
